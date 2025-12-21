@@ -32,22 +32,21 @@ from weather import get_weather
 
 # 加载环境变量
 load_dotenv()
-API_KEY = os.getenv("DEEPSEEK_API_KEY")
+KEY = os.getenv("DEEPSEEK_API_KEY")
 
 
 # 初始化模型
-model = init_chat_model("groq:llama-3.3-70b-versatile", api_key=API_KEY)
+model = init_chat_model("deepseek:deepseek-chat", api_key=KEY)
 
 
-
-# ============================================================================
-# 示例 1：理解执行循环 - 查看完整消息历史
-# ============================================================================
+# ========================================================================
+# 示例1:理解执行循环 - 查看完整消息历史
+# ========================================================================
 def example_1_understand_loop():
     """
-    示例1：查看 Agent 执行循环的每一步
+    示例1: 查看Agent 执行循环的每一步
 
-    关键：response['messages'] 包含完整的对话历史
+    关键；response['messages']包含完整的对话历史
     """
     print("\n" + "="*70)
     print("示例 1：Agent 执行循环详解")
@@ -60,40 +59,39 @@ def example_1_understand_loop():
     )
 
     print("\n问题：25 乘以 8 等于多少？")
-    response = agent.invoke({
-        "messages": [{"role": "user", "content": "25 乘以 8 等于多少？"}]
+    response=agent.invoke({
+        "messages":[
+            {"role": "user", "content": "25 乘以 8 等于多少？"}
+        ]
     })
 
     print("\n完整消息历史：")
-    for i, msg in enumerate(response['messages'], 1):
-        print(f"\n{'='*60}")
+    for i,message in enumerate(response['messages'],1):
+        print(f"\n{'=' * 60}")
         print(f"消息 {i}: {msg.__class__.__name__}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
-        if hasattr(msg, 'content') and msg.content:
-            print(f"内容: {msg.content}")
+        if hasattr(message, 'content') and message.content:
+            print(f"内容：{message.content}")
 
-        if hasattr(msg, 'tool_calls') and msg.tool_calls:
-            print(f"工具调用:")
-            for tc in msg.tool_calls:
-                print(f"  - 工具: {tc['name']}")
-                print(f"  - 参数: {tc['args']}")
+        if hasattr(message, 'tool_calls') and message.tool_calls:
+            print(f"工具调用：{message.tool_calls}")
 
-        if hasattr(msg, 'name'):
-            print(f"工具名: {msg.name}")
+        if hasattr(message, 'name'):
+            print(f"名称：{message.name}")
 
-    print("\n\n执行流程：")
-    print("""
-    1. HumanMessage    → 用户问题
-    2. AIMessage       → AI 决定调用工具（包含 tool_calls）
-    3. ToolMessage     → 工具执行结果
-    4. AIMessage       → AI 基于结果生成最终答案
-    """)
+        print("\n\n执行流程：")
+        print("""
+            1. HumanMessage    → 用户问题
+            2. AIMessage       → AI 决定调用工具（包含 tool_calls）
+            3. ToolMessage     → 工具执行结果
+            4. AIMessage       → AI 基于结果生成最终答案
+            """)
 
-    print("\n关键点：")
-    print("  - Agent 自动完成这个循环")
-    print("  - 所有步骤都记录在 messages 中")
-    print("  - 最后一条消息是最终答案")
+        print("\n关键点：")
+        print("  - Agent 自动完成这个循环")
+        print("  - 所有步骤都记录在 messages 中")
+        print("  - 最后一条消息是最终答案")
 
 # ============================================================================
 # 示例 2：流式输出（Streaming）
