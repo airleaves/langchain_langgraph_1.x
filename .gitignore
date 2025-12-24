@@ -43,7 +43,9 @@ miniconda3/
 # ========================
 .DS_Store
 Thumbs.db
-
+.sqlite
+.sqlite-wal
+.sqlite-shm
 # ========================
 # Git
 # ========================
